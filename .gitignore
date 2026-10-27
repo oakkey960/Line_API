@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+npm-debug.log*
+*.sql
+backups/
+*.pem
+*.key
+*token*.txt
+

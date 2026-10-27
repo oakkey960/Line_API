@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { createTemplate, deleteTemplate, listTemplates, updateTemplate } from "../controllers/template.controller";
+import { authenticate } from "../middleware/auth.middleware";
+const router = Router();
+router.use(authenticate);
+router.get("/", listTemplates);
+router.post("/", createTemplate);
+router.patch("/:id", updateTemplate);
+router.delete("/:id", deleteTemplate);
+export default router;
