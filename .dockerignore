@@ -6,3 +6,8 @@ dist
 *.log
 *.sql
 coverage
+backups
+secrets
+*.pem
+*.key
+*token*.txt

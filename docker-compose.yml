@@ -1,0 +1,52 @@
+# Connects to an existing MySQL server; does not create or replace a database.
+services:
+  migrate:
+    build:
+      context: .
+      target: migration
+    env_file: .env
+    environment:
+      NODE_ENV: production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: ["npm", "run", "migrate", "--", "--env", "production"]
+    restart: "no"
+
+  line_back:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORTAPP: "3002"
+    ports:
+      - "${API_BIND_IP:-127.0.0.1}:${API_HOST_PORT:-3002}:3002"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  seed-admin:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: runtime
+    env_file: .env
+    environment:
+      NODE_ENV: production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      line_back:
+        condition: service_healthy
+    command: ["node", "dist/scripts/seedAdmin.js"]
+    restart: "no"
