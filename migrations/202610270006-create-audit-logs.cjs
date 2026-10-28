@@ -7,7 +7,8 @@ module.exports = {
       action: { type: Sequelize.STRING(100), allowNull: false },
       entity_type: { type: Sequelize.STRING(100), allowNull: true },
       entity_id: { type: Sequelize.STRING(100), allowNull: true },
-      metadata: { type: Sequelize.JSON, allowNull: true },
+      // Keep JSON payloads as text for servers without a native JSON type.
+      metadata: { type: Sequelize.TEXT("long"), allowNull: true },
       ip_address: { type: Sequelize.STRING(64), allowNull: true },
       created_at: { type: Sequelize.DATE, allowNull: false },
       updated_at: { type: Sequelize.DATE, allowNull: false },
